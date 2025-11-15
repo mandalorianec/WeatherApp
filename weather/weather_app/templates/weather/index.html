@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if request.user.is_authenticated %}
+    <form method="GET" action="{% url 'weather:search' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="city" class="form-control" placeholder="Найти город..." required>
+            <button type="submit" class="btn btn-primary" >Искать</button>
+        </div>
+    </form>
+    <div class="row">
+        {% for location in locations %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center shadow border-0 rounded-lg bg-light">
+                <div class="card-header bg-transparent border-0">
+                    <img class="weather-card-image pt-2" src="{{location.icon_url}}" alt="Weather icon" style="width: 100px; height: 100px;">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold">{{location.city}}</h5>
+                    <p class="card-text">{{location.country}}</p>
+                    <p class="card-text text-muted">{{location.weather}}</p>
+                    <p class="card-text">{{location.description}}</p>
+                    <h2 class="display-4 font-weight-bold">{{location.temp}}</h2>
+                    <div class="d-flex justify-content-center small text-muted">
+                        <p class="me-3">Lat: {{location.lat}}</p>
+                        <p>Lon: {{location.lon}}</p>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 pb-3">
+                    <form action="{% url 'weather:delete' location.id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-danger" type="submit">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+        <div class="alert alert-warning text-center shadow-lg" role="alert">
+            <h4>Пожалуйста, авторизуйтесь</h4>
+            <p>Чтобы воспользоваться всеми функциями приложения, вам необходимо войти в свою учетную запись.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block navigation %}
+{% if page_obj.has_other_pages %}
+<nav class="mt-5" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+                <span aria-hidden="true">&lt;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for p in paginator.page_range %}
+            {% if p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                <li class="page-item {% if page_obj.number == p %}active{% endif %}">
+                    <a class="page-link" href="?page={{p}}">{{p}}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{page_obj.next_page_number}}" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{paginator.num_pages}}" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
