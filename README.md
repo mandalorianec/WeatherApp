@@ -61,9 +61,9 @@ cd WeatherApp
 
 Создайте local_settings в папке weather/weather/settings. Рядом с base.py и tests.py
 
-```text
-from weather.weather.settings.base import *
-```
+   ```text
+   from weather.weather.settings.base import *
+   ```
 
 ### Деплой для продакшена
 
@@ -84,26 +84,20 @@ from weather.weather.settings.base import *
 
 2. В корне проекта(рядом с manage.py) выполните:
 
-```shell
-docker compose up -d --build
-```
+   ```shell
+   docker compose up -d --build
+   ```
 
 3. Приложение доступно по адресу http://127.0.0.1/ (или ip вашего сервера)
 4. Чтобы остановить приложение, пропишите:
 
-```shell
-docker compose down
-```
+   ```shell
+   docker compose down
+   ```
 
 ### Локальный деплой, для разработки (БД создаётся докером, а проект находится локально)
 
-1. **Склонируйте репозиторий:**
-   ```shell
-   git clone [ССЫЛКА_НА_ВАШ_GIT_РЕПОЗИТОРИЙ]
-   cd WeatherApp
-   ```
-
-2. Создайте .env рядом с manage.py. Сгенерируйте свой ключ, например, на https://djecrety.ir/
+1. Создайте .env рядом с manage.py. Сгенерируйте свой ключ, например, на https://djecrety.ir/
     ```dotenv
     DEBUG=True
     SECRET_KEY="local_development_key"
@@ -115,25 +109,25 @@ docker compose down
     POSTGRES_HOST=127.0.0.1 # <-- Указываем localhost
     POSTGRES_PORT=5432
     ```
-3. В проекте есть `docker-compose.yml`, который настроен для запуска всех сервисов. Чтобы запустить **только базу данных
-   **, выполните в терминале:
+2. В проекте есть `docker-compose.yml`, который настроен для запуска всех сервисов. Чтобы запустить только базу данных,
+   выполните в терминале:
     ```shell
     docker compose up postgres -d
     ```
-4. Установите зависимости
+3. Установите зависимости
     ```shell
     poetry install
     ```
-5. Примените миграции
+4. Примените миграции
     ```shell
-    python manage.py migrate
-    python manage.py runserver
+    poetry run python manage.py migrate
+    poetry run python manage.py runserver
     ```
-6. Чтобы остановить приложение, пропишите:
+5. Чтобы остановить приложение, пропишите:
 
-```shell
-  docker compose stop postgres
-```
+   ```shell
+     docker compose stop postgres
+   ```
 
 Приложение будет доступно по адресу http://127.0.0.1:8000/ с отладкой и всеми инструментами
 
