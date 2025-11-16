@@ -1,30 +1,26 @@
-[project]
+[tool.poetry]
 name = "weather-dev"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "mandalorianec",email = "173474864+mandalorianec@users.noreply.github.com"}
-]
+authors = ["mandalorianec <173474864+mandalorianec@users.noreply.github.com>"]
 readme = "README.md"
-requires-python = ">=3.10, <4"
-dependencies = [
-    "django (>=5.2.7,<6.0.0)",
-    "psycopg2 (>=2.9.11,<3.0.0)",
-    "requests (>=2.32.5,<3.0.0)",
-    "django-environ (>=0.12.0,<0.13.0)",
-    "django-crispy-forms (>=2.4,<3.0)",
-    "aiohttp (>=3.13.2,<4.0.0)",
-    "crispy-bootstrap5 (>=2025.6,<2026.0)",
-    "gunicorn (>=23.0.0,<24.0.0)",
-    "uvicorn (>=0.38.0,<0.39.0)"
-]
+packages = [{ include = "weather" }]
 
+[tool.poetry.dependencies]
+python = ">=3.10, <4"
+django = ">=5.2.7,<6.0.0"
+psycopg2 = ">=2.9.11,<3.0.0"
+requests = ">=2.32.5,<3.0.0"
+django-environ = ">=0.12.0,<0.13.0"
+django-crispy-forms = ">=2.4,<3.0"
+aiohttp = ">=3.13.2,<4.0.0"
+crispy-bootstrap5 = ">=2025.6,<2026.0"
+gunicorn = ">=23.0.0,<24.0.0"
+uvicorn = ">=0.38.0,<0.39.0"
+
+[tool.poetry.group.dev.dependencies]
+django-debug-toolbar = ">=6.1.0,<7.0.0"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[dependency-groups]
-dev = [
-    "django-debug-toolbar (>=6.1.0,<7.0.0)"
-]

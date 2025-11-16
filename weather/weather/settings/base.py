@@ -52,6 +52,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'weather.weather_app.middlewares.WeatherAppExceptionMiddleware',
 ]
+LOGS_DIR = BASE_DIR / 'logs'
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 LOGGING = {
     "version": 1,
@@ -71,7 +73,7 @@ LOGGING = {
         "file": {
             "class": "logging.FileHandler",
             "formatter": "main_format",
-            "filename": BASE_DIR / "logs/django.log",
+            'filename': LOGS_DIR / 'django.log',
         }
     },
     'loggers': {
