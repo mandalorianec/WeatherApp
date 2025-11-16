@@ -23,15 +23,15 @@
 ## Базовая настройка Linux (Ubuntu) для деплоя
 
 ```shell
- # Разрешаем подключения по SSH
- ufw allow OpenSSH
+# Разрешаем подключения по SSH
+ufw allow OpenSSH
 
- # Разрешаем трафик на стандартные веб-порты
- ufw allow 80/tcp   # Для HTTP
- ufw allow 443/tcp  # Для HTTPS (понадобится в будущем)
+# Разрешаем трафик на стандартные веб-порты
+ufw allow 80/tcp   # Для HTTP
+ufw allow 443/tcp  # Для HTTPS (понадобится в будущем)
 
- # Включаем файрвол
- ufw enable 
+# Включаем файрвол
+ufw enable 
 ```
 
 Иногда системный файрвол блокирует внутреннюю сеть Docker. Чтобы это исправить, нужно явно разрешить трафик из этой сети
@@ -65,21 +65,69 @@ cd WeatherApp
 from weather.weather.settings.base import *
 ```
 
+### Локальный деплой, для разработки (БД создаётся докером, а проект находится локально)
+
+1. Создайте .env рядом с manage.py. Сгенерируйте свой ключ, например, на https://djecrety.ir/
+
+```dotenv
+DEBUG=True
+SECRET_KEY="local_development_key"
+API_KEY="your_api_key"
+
+POSTGRES_DB="weather_db"
+POSTGRES_USER="backender"
+POSTGRES_PASSWORD="12345"
+POSTGRES_HOST=127.0.0.1
+POSTGRES_PORT=5432
+```
+
+2. В проекте есть `docker-compose.yml`, который настроен для запуска всех сервисов. Чтобы запустить только базу данных,
+   выполните в терминале:
+
+ ```shell
+docker compose up postgres -d
+ ```
+
+3. Установите зависимости
+
+ ```shell
+poetry install
+ ```
+
+4. Примените миграции
+
+ ```shell
+poetry run python manage.py migrate
+ ```
+
+5. Запустите приложение:
+
+```shell
+poetry run python manage.py runserver
+```
+
+6. Чтобы остановить приложение, пропишите:
+
+```shell
+docker compose stop postgres
+```
+
+Приложение будет доступно по адресу http://127.0.0.1:8000/ с отладкой и всеми инструментами
+
 ### Деплой для продакшена
 
 1. Создайте .env рядом с manage.py. Сгенерируйте свой ключ, например, на https://djecrety.ir/
 
 ```dotenv
- DEBUG=False
- SECRET_KEY="your_super_secret_production_key"
- API_KEY="your_api_key"
+DEBUG=False
+SECRET_KEY="your_super_secret_production_key"
+API_KEY="your_api_key"
 
- POSTGRES_DB="weather_db"
- POSTGRES_USER="backender"
- POSTGRES_PASSWORD="12345"
- POSTGRES_HOST=postgres  # <-- Указываем имя сервиса Docker
- POSTGRES_PORT=5432
-
+POSTGRES_DB="weather_db"
+POSTGRES_USER="backender"
+POSTGRES_PASSWORD="12345"
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
 ```
 
 2. В корне проекта(рядом с manage.py) выполните:
@@ -94,42 +142,6 @@ docker compose up -d --build
 ```shell
 docker compose down
 ```
-
-### Локальный деплой, для разработки (БД создаётся докером, а проект находится локально)
-
-1. Создайте .env рядом с manage.py. Сгенерируйте свой ключ, например, на https://djecrety.ir/
- ```dotenv
- DEBUG=True
- SECRET_KEY="local_development_key"
- API_KEY="your_api_key"
-
- POSTGRES_DB="weather_db"
- POSTGRES_USER="backender"
- POSTGRES_PASSWORD="12345"
- POSTGRES_HOST=127.0.0.1 # <-- Указываем localhost
- POSTGRES_PORT=5432
- ```
-2. В проекте есть `docker-compose.yml`, который настроен для запуска всех сервисов. Чтобы запустить только базу данных,
-   выполните в терминале:
- ```shell
- docker compose up postgres -d
- ```
-3. Установите зависимости
- ```shell
- poetry install
- ```
-4. Примените миграции
- ```shell
- poetry run python manage.py migrate
- poetry run python manage.py runserver
- ```
-5. Чтобы остановить приложение, пропишите:
-
-```shell
-  docker compose stop postgres
-```
-
-Приложение будет доступно по адресу http://127.0.0.1:8000/ с отладкой и всеми инструментами
 
 # Использование разных конфигураций
 
