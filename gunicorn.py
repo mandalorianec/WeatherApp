@@ -10,7 +10,7 @@ worker_class = 'uvicorn.workers.UvicornWorker'
 workers = max_workers()
 
 env = {
-    "DJANGO_SETTINGS_MODULE": 'weather.weather.settings.local_settings'
+    "DJANGO_SETTINGS_MODULE": 'weather.weather.settings.selected_settings'
 }
 
 reload = True

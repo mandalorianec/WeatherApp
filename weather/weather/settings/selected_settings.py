@@ -1,0 +1,1 @@
+from weather.weather.settings.base import *

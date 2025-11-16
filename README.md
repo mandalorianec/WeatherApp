@@ -59,12 +59,6 @@ git clone https://github.com/mandalorianec/WeatherApp.git
 cd WeatherApp
 ```
 
-Создайте local_settings в папке weather/weather/settings. Рядом с base.py и tests.py
-
-```text
-from weather.weather.settings.base import *
-```
-
 ### Локальный деплой, для разработки (БД создаётся докером, а проект находится локально)
 
 1. Создайте .env рядом с manage.py. Сгенерируйте свой ключ, например, на https://djecrety.ir/
@@ -147,18 +141,20 @@ docker compose down
 
 В проекте представлены 2 конфигурации: base.py и tests.py. base.py копирка settings.py. tests.py импортирует всё
 содержимое base.py и дополняет/заменяет его. Можно использовать для изменения срока жизни сессии для тестов(tests.py).
-Выбор конфигурации производится в файле local_settings.py, который нужно создать в settings, рядом с base.py и tests.py.
-Поместить в него следующее содержимое:
+Выбор конфигурации производится в файле selected_settings.py. Меняйте конфигурацию, изменяя источник настроек
+base/tests:
 
 ```text
 from weather.weather.settings.base import *
+или
+from weather.weather.settings.tests import *
 ```
 
 base/tests - в зависимости от конфигурации, которую вы выбрали
 
-В файле manage.py local_settings.py прописывается вместо settings.py:
+В файле manage.py selected_settings.py прописывается вместо settings.py:
 
 ```text
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'weather.weather.settings.local_settings') # без .py
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'weather.weather.settings.selected_settings') # без .py
 ```
 
