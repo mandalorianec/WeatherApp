@@ -1,13 +1,10 @@
 from unittest.mock import AsyncMock, Mock, MagicMock
-
-import aiohttp
-from aiohttp import ClientError, ClientResponseError
 from asgiref.sync import async_to_sync
 from django.test import TestCase
 
 from weather.weather_app.dto.weather_location_dto import WeatherLocationDto
 from weather.weather_app.exceptions import WebError
-from weather.weather_app.service import WeatherService, logger
+from weather.weather_app.service import WeatherService
 from weather.users_app.models import CustomUser
 from weather.weather_app.models import Location
 from weather.weather_app.service import OpenWeatherService

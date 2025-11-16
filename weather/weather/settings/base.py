@@ -24,7 +24,7 @@ environ.Env.read_env(BASE_DIR / '.env')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ["127.0.0.1"]
 
 # Application definition
