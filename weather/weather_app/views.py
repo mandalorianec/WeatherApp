@@ -66,6 +66,8 @@ class SearchView(LoginRequiredMixin, View):
 
     def get(self, request):
         city = request.GET.get("city", "")
+        if len(city) > 100:
+            return render(request, 'error.html', {'status_code': 400, 'message': 'Слишком большое название'}, status=400)
 
         api_response = async_to_sync(_find_cities_with_session)(city)
 
