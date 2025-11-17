@@ -17,7 +17,7 @@ logger = logging.getLogger('main')
 
 class OpenWeatherService:
     _geo_url = f"http://api.openweathermap.org/geo/1.0/direct?appid={settings.API_KEY}&limit=100"
-    _weather_url = f"https://api.openweathermap.org/data/2.5/weather?appid={settings.API_KEY}&units=metric"
+    _weather_url = f"https://api.openweathermap.org/data/2.5/weather?appid={settings.API_KEY}&units=metric&lang=ru"
 
     def __init__(self, session: aiohttp.ClientSession):
         self._session = session
@@ -93,6 +93,7 @@ class OpenWeatherService:
 
 class WeatherService:
     async def get_locations_for(self, user_id: int, search_service: OpenWeatherService) -> list[WeatherLocationDto]:
+
         res = []
 
         user = await sync_to_async(CustomUser.objects.prefetch_related('locations').filter(pk=user_id).first)()
@@ -107,6 +108,7 @@ class WeatherService:
                 if weather_data.get('cod') != 200:
                     logger.warning(f"Локация {location.name} временно недоступна")
                     continue
+
                 dto = self._make_weather_location_dto(location, weather_data, search_service)
                 res.append(dto)
             else:
@@ -126,11 +128,30 @@ class WeatherService:
 
     @staticmethod
     def _make_weather_location_dto(location, weather_data, search_service):
+        weather_translations = {
+            'Clear': 'Ясно',
+            'Clouds': 'Облачно',
+            'Rain': 'Дождь',
+            'Drizzle': 'Морось',
+            'Thunderstorm': 'Гроза',
+            'Snow': 'Снег',
+            'Mist': 'Дымка',
+            'Smoke': 'Дым',
+            'Haze': 'Мгла',
+            'Dust': 'Пыль',
+            'Fog': 'Туман',
+            'Sand': 'Песок',
+            'Ash': 'Пепел',
+            'Squall': 'Шквал',
+            'Tornado': 'Торнадо',
+        }
+        weather_main_english = weather_data['weather'][0]['main']
+        weather_main_russian = weather_translations.get(weather_main_english, weather_main_english)
         dto = WeatherLocationDto(
             location.pk,
             location.name,
             weather_data['sys']['country'],
-            weather_data['weather'][0]['main'],
+            weather_main_russian,
             weather_data['weather'][0]['description'],
             weather_data['main']['temp'],
             search_service.get_icon_by(weather_data['weather'][0]['icon']),
