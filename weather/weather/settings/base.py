@@ -130,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
     #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     # },
     {
-        'NAME': 'weather.users_app.validators.SimpleValidatorForTests',
+        'NAME': 'weather.users_app.validators.SimplePasswordLengthValidator',
     },
 ]
 

@@ -1,15 +1,17 @@
-from django.contrib.auth.password_validation import ValidationError, MinimumLengthValidator
+from django.core.exceptions import ValidationError
 
 
-class SimpleValidatorForTests(MinimumLengthValidator):
-    def __init__(self):
-        super().__init__(min_length=3)
+class SimplePasswordLengthValidator:
+    def __init__(self, min_length=3, max_length=30):
+        self.min_length = min_length
+        self.max_length = max_length
 
     def validate(self, password, user=None):
-        self.min_length = 3
-        if len(password) < self.min_length:
+        if len(password) < self.min_length or len(password) > self.max_length:
             raise ValidationError(
-                self.get_error_message(),
-                code="password_to_short",
-                params={"min_length": self.min_length}
+                f"Пароль должен содержать от {self.min_length} до {self.max_length} символов.",
+                code="invalid_length",
             )
+
+    def get_help_text(self):
+        return f"Пароль должен содержать от {self.min_length} до {self.max_length} символов."
