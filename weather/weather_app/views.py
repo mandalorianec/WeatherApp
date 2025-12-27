@@ -9,6 +9,7 @@ from django.views.generic import DeleteView, ListView, CreateView, View
 from weather.weather_app.forms import LocationForm
 from weather.weather_app.models import Location
 from weather.weather_app.service import OpenWeatherService, WeatherService
+from django.contrib import messages
 
 # Create your views here.
 logger = logging.getLogger('main')
@@ -47,6 +48,9 @@ class AddLocationView(LoginRequiredMixin, CreateView):
 
     def form_invalid(self, form):
         logger.warning(form.errors)
+        for error_list in form.errors.values():
+            for error in error_list:
+                messages.warning(self.request, error)
         return redirect('home')
 
     def get_form_kwargs(self):
@@ -67,7 +71,8 @@ class SearchView(LoginRequiredMixin, View):
     def get(self, request):
         city = request.GET.get("city", "")
         if len(city) > 100:
-            return render(request, 'error.html', {'status_code': 400, 'message': 'Слишком большое название'}, status=400)
+            return render(request, 'error.html', {'status_code': 400, 'message': 'Слишком большое название'},
+                          status=400)
 
         api_response = async_to_sync(_find_cities_with_session)(city)
 
@@ -102,6 +107,7 @@ class DeleteLocationView(LoginRequiredMixin, DeleteView):
 
 def error_404(request, exception):
     return render(request, 'error.html', {'status_code': 404, 'message': 'Страница не найдена'}, status=404)
+
 
 def error_500(request):
     return render(request, 'error.html', {'status_code': 500, 'message': 'Внутренняя ошибка сервера'}, status=500)
