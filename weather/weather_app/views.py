@@ -84,8 +84,8 @@ class SearchView(LoginRequiredMixin, View):
         used_states = set()
         res = []
         for location in api_response:
-            lat_digit = int(location['lat'])
-            lon_digit = int(location['lon'])
+            lat_digit = location['lat']
+            lon_digit = location['lon']
             if (lat_digit, lon_digit) in used_states:
                 continue
             used_states.add((lat_digit, lon_digit))
