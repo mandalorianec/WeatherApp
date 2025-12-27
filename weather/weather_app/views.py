@@ -18,8 +18,8 @@ logger = logging.getLogger('main')
 async def _get_locations_for_(user_id: int):
     async with aiohttp.ClientSession() as session:
         search_service = OpenWeatherService(session)
-        weather_service = WeatherService()
-        locations = await weather_service.get_locations_for(user_id, search_service)
+        weather_service = WeatherService(search_service)
+        locations = await weather_service.get_locations_for(user_id)
         return locations
 
 

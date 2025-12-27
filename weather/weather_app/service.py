@@ -92,7 +92,10 @@ class OpenWeatherService:
 
 
 class WeatherService:
-    async def get_locations_for(self, user_id: int, search_service: OpenWeatherService) -> list[WeatherLocationDto]:
+    def __init__(self, search_service: OpenWeatherService):
+        self.search_service = search_service
+
+    async def get_locations_for(self, user_id: int) -> list[WeatherLocationDto]:
 
         res = []
 
@@ -109,25 +112,24 @@ class WeatherService:
                     logger.warning(f"Локация {location.name} временно недоступна")
                     continue
 
-                dto = self._make_weather_location_dto(location, weather_data, search_service)
+                dto = self._make_weather_location_dto(location, weather_data)
                 res.append(dto)
             else:
                 uncached_locations.append(location)
 
         # Обработка некэшированных объектов
-        weather_for_locations = await search_service.get_weather_for(uncached_locations)
+        weather_for_locations = await self.search_service.get_weather_for(uncached_locations)
         for location, weather_data in zip(uncached_locations, weather_for_locations):
             key = f"{location.latitude}:{location.longitude}"
             cache.set(key, weather_data, timeout=600)
             if weather_data.get('cod') != 200:
                 logger.warning(f"Локация {location.name} временно недоступна")
                 continue
-            dto = self._make_weather_location_dto(location, weather_data, search_service)
+            dto = self._make_weather_location_dto(location, weather_data)
             res.append(dto)
         return res
 
-    @staticmethod
-    def _make_weather_location_dto(location, weather_data, search_service):
+    def _make_weather_location_dto(self, location, weather_data):
         weather_translations = {
             'Clear': 'Ясно',
             'Clouds': 'Облачно',
@@ -154,7 +156,7 @@ class WeatherService:
             weather_main_russian,
             weather_data['weather'][0]['description'],
             weather_data['main']['temp'],
-            search_service.get_icon_by(weather_data['weather'][0]['icon']),
+            self.search_service.get_icon_by(weather_data['weather'][0]['icon']),
             weather_data['coord']['lat'],
             weather_data['coord']['lon']
         )

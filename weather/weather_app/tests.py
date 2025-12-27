@@ -95,9 +95,9 @@ class ServiceTests(TestCase):
         service_mock.get_weather_for.return_value = self.test_data
         service_mock.get_icon_by.return_value = "https://openweathermap.org/img/wn/04n@2x.png" # просто для теста
 
-        weather_service = WeatherService()
+        weather_service = WeatherService(service_mock)
 
-        locations = async_to_sync(weather_service.get_locations_for)(self.user.pk, service_mock)
+        locations = async_to_sync(weather_service.get_locations_for)(self.user.pk)
 
         self.assertEqual(len(locations), 4)
 
