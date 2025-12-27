@@ -3,7 +3,7 @@ import logging
 import aiohttp
 from aiohttp.client_exceptions import ClientConnectorError, ClientResponseError
 from asyncio.exceptions import TimeoutError
-
+from django.templatetags.static import static
 from django.core.cache import cache
 from asgiref.sync import sync_to_async
 from django.conf import settings
@@ -87,9 +87,7 @@ class OpenWeatherService:
 
     @staticmethod
     def get_icon_by(code: str):
-        _icon_url = f"https://openweathermap.org/img/wn/{code}@2x.png"
-        return _icon_url
-
+        return static(f"weather_app/img/weather/{code}.png")
 
 class WeatherService:
     def __init__(self, search_service: OpenWeatherService):
