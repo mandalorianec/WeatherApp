@@ -33,7 +33,7 @@ class LocationForm(forms.ModelForm):
             int_lon=Floor('longitude')
         )
 
-        if locations_with_rounded_coords.filter(user=self.user, name=name, int_lat=latitude,
+        if locations_with_rounded_coords.filter(user=self.user, int_lat=latitude,
                                                 int_lon=longitude).exists():
             logger.info(f"Попытка добавить дубликат {name, cleaned_data['latitude'], cleaned_data['longitude']}")
             raise ValidationError("Локация уже отслеживается")

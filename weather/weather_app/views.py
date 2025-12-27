@@ -89,6 +89,9 @@ class SearchView(LoginRequiredMixin, View):
             if (lat_digit, lon_digit) in used_states:
                 continue
             used_states.add((lat_digit, lon_digit))
+            if 'local_names' in location:
+                if 'ru' in location['local_names']:
+                    location['name'] = location['local_names']['ru']
             res.append(location)
         return res
 
