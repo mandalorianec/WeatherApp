@@ -169,7 +169,7 @@ class SearchServiceTests(TestCase):
         session_mock.get.side_effect = WebError()
 
         service = OpenWeatherService(session_mock)
-
         with self.assertRaises(WebError):
-            api_response = async_to_sync(service.find_cities_by)("Berlin")
+            async_to_sync(service.find_cities_by)("Berlin") # должно кинуть исключение WebError
+
 
