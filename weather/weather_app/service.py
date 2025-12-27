@@ -16,8 +16,8 @@ logger = logging.getLogger('main')
 
 
 class OpenWeatherService:
-    _geo_url = f"http://api.openweathermap.org/geo/1.0/direct?appid={settings.API_KEY}&limit=100"
-    _weather_url = f"https://api.openweathermap.org/data/2.5/weather?appid={settings.API_KEY}&units=metric&lang=ru"
+    _geo_url = f"http://api.openweathermap.org/geo/1.0/direct?appid={settings.OPENWEATHERMAP_API_KEY}&limit=100"
+    _weather_url = f"https://api.openweathermap.org/data/2.5/weather?appid={settings.OPENWEATHERMAP_API_KEY}&units=metric&lang=ru"
 
     def __init__(self, session: aiohttp.ClientSession):
         self._session = session

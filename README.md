@@ -65,8 +65,8 @@ cd WeatherApp
 
 ```dotenv
 DEBUG=True
-SECRET_KEY="local_development_key"
-API_KEY="your_api_key"
+OPENWEATHERMAP_SECRET_KEY="local_development_key"
+OPENWEATHERMAP_API_KEY="your_api_key"
 
 POSTGRES_DB="weather_db"
 POSTGRES_USER="backender"
@@ -114,8 +114,8 @@ docker compose stop postgres
 
 ```dotenv
 DEBUG=False
-SECRET_KEY="your_super_secret_production_key"
-API_KEY="your_api_key"
+OPENWEATHERMAP_SECRET_KEY="your_super_secret_production_key"
+OPENWEATHERMAP_API_KEY="your_api_key"
 
 POSTGRES_DB="weather_db"
 POSTGRES_USER="backender"
